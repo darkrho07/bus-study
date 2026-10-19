@@ -1,0 +1,25 @@
+{
+  "name": "Bus Study — a night-bus Pomodoro room",
+  "short_name": "Bus Study",
+  "description": "A free Pomodoro timer, tiny task list, soft rain and 1,000+ nostalgic Hindi songs. Study all night on NH 48.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#150803",
+  "theme_color": "#150803",
+  "orientation": "portrait-primary",
+  "categories": ["education", "productivity", "music"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bus Study — A Night-Bus Pomodoro Room &amp; 90s Hindi Playlist</title>
+<meta name="description" content="Study all night on NH 48. A free Pomodoro timer, tiny task list, soft rain and 1,000+ nostalgic Hindi songs — no login, no sign-up, just you and the road.">
+<meta name="theme-color" content="#150803">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Bus Study — study all night on NH 48">
+<meta property="og:description" content="A Pomodoro room on a night bus: 90s Hindi songs, rain on the window, one chapter at a time.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23ffc72c'/%3E%3Cpath d='M7 6.4h10a1.2 1.2 0 0 1 1.2 1.2v8.2a1.2 1.2 0 0 1-1.2 1.2h-.6v1a1 1 0 0 1-2 0v-1H9.6v1a1 1 0 0 1-2 0v-1H7A1.2 1.2 0 0 1 5.8 15.8V7.6A1.2 1.2 0 0 1 7 6.4Zm1.1 2.2v3.1h7.8V8.6H8.1Zm.3 5.4a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8Zm7.2 0a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8Z' fill='%231c1e23'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="home">
+
+<!-- ======================= BACKGROUND SCENE ======================= -->
+<div class="scene" aria-hidden="true">
+  <video class="scene__media" id="sceneVideo" autoplay muted loop playsinline preload="metadata" poster="assets/road.jpg">
+    <source src="assets/road-wide.mp4" type="video/mp4" media="(min-width: 900px)">
+    <source src="assets/road.mp4" type="video/mp4">
+  </video>
+  <div class="scene__still" id="sceneStill" style="background-image:url('assets/road.jpg')"></div>
+  <div class="scene__veil"></div>
+  <div class="scene__clouds"></div>
+  <svg class="scene__grain" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <filter id="film-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="17" stitchTiles="stitch" result="noise"></feTurbulence>
+      <feColorMatrix in="noise" type="saturate" values="0" result="mono"></feColorMatrix>
+      <feComponentTransfer in="mono">
+        <feFuncR type="discrete" tableValues="0.15 0.35 0.55 0.75 0.95"></feFuncR>
+        <feFuncG type="discrete" tableValues="0.15 0.35 0.55 0.75 0.95"></feFuncG>
+        <feFuncB type="discrete" tableValues="0.15 0.35 0.55 0.75 0.95"></feFuncB>
+      </feComponentTransfer>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#film-grain)"></rect>
+  </svg>
+</div>
+<canvas id="rain" aria-hidden="true"></canvas>
+
+<!-- ======================= HEADER ======================= -->
+<header class="site-header">
+  <a class="brand" href="index.html" aria-label="Bus Study home">
+    <span class="brand__mark">
+      <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true">
+        <path d="m12.06 24c6.72-.17 12.11-5.64 11.94-12.06a12 12 0 1 0 -11.94 12.06" fill="#ffc72c"></path>
+        <path d="m18.78 10.67-.66-5.17c-.16-.93-.75-1.3-1.63-1.68a14.25 14.25 0 0 0 -4.49-.82 14.32 14.32 0 0 0 -4.5.82c-.86.37-1.45.75-1.63 1.68l-.66 5.17v7.15h1.17v1.25a1 1 0 0 0 1.91 0v-1.25h7.45v1.25a.91.91 0 0 0 .48.8 1 1 0 0 0 1 0 .88.88 0 0 0 .47-.8v-1.25h1.13zm-9.57-6.36h5.61a.42.42 0 0 1 .43.41.42.42 0 0 1 -.43.42h-5.61a.43.43 0 0 1 -.43-.42.42.42 0 0 1 .43-.41zm-2.79 6.21.58-4.09a.54.54 0 0 1 .51-.43h9.06a.56.56 0 0 1 .54.44l.54 4.09a.33.33 0 0 1 0 .14.49.49 0 0 1 -.16.37.54.54 0 0 1 -.38.15h-10.17a.56.56 0 0 1 -.38-.19.57.57 0 0 1 -.14-.38.33.33 0 0 1 0-.1zm.92 5.09a1 1 0 1 1 1-1 1 1 0 0 1 -.3.7 1 1 0 0 1 -.7.3zm9.36 0a1 1 0 1 1 1-1 1 1 0 0 1 -.3.7 1.06 1.06 0 0 1 -.72.29z" fill="#1c1e23"></path>
+      </svg>
+    </span>
+    <span class="brand__text">
+      <span class="brand__name">बस स्टडी</span>
+      <span class="brand__route" id="brandRoute">NH 48 · DELHI – MUMBAI</span>
+    </span>
+  </a>
+
+  <div class="header-right">
+    <div class="clock" aria-label="Local time"><span id="clockH">00</span><em>:</em><span id="clockM">00</span><em>:</em><span id="clockS">00</span></div>
+    <button class="buddy-chip" type="button" aria-haspopup="dialog" data-open="logbook">
+      <span class="buddy-chip__avatar" aria-hidden="true">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="24" r="24" fill="#341709"></circle>
+          <ellipse cx="24" cy="13" rx="22" ry="15" fill="#8a3f14" opacity=".45"></ellipse>
+          <path d="M13.2 22.5 14.6 9.2 24.2 16.6Z" fill="#f2913f"></path>
+          <path d="M34.8 22.5 33.4 9.2 23.8 16.6Z" fill="#f2913f"></path>
+          <path d="M15.4 20.4 16.2 12.8 21.6 17.1Z" fill="#c1552a"></path>
+          <path d="M32.6 20.4 31.8 12.8 26.4 17.1Z" fill="#c1552a"></path>
+          <ellipse cx="24" cy="28" rx="13" ry="12" fill="#f2913f"></ellipse>
+          <ellipse cx="21.3" cy="36.2" rx="3.6" ry="2.8" fill="#ffc189"></ellipse>
+          <ellipse cx="26.7" cy="36.2" rx="3.6" ry="2.8" fill="#ffc189"></ellipse>
+          <g stroke="#ffd9b0" stroke-width=".9" stroke-linecap="round" opacity=".5">
+            <path d="M14.6 33.4 8.4 31.8M14.4 35.3 7.9 35.4M14.9 37 9.2 38.9"></path>
+            <path d="M33.4 33.4 39.6 31.8M33.6 35.3 40.1 35.4M33.1 37 38.8 38.9"></path>
+          </g>
+          <ellipse cx="19" cy="31" rx="3.3" ry="3.7" fill="#fff4e2"></ellipse>
+          <ellipse cx="29" cy="31" rx="3.3" ry="3.7" fill="#fff4e2"></ellipse>
+          <ellipse cx="19" cy="31.1" rx="1.35" ry="2.8" fill="#150803"></ellipse>
+          <ellipse cx="29" cy="31.1" rx="1.35" ry="2.8" fill="#150803"></ellipse>
+          <circle cx="18.1" cy="29.6" r=".85" fill="#fff" opacity=".9"></circle>
+          <circle cx="28.1" cy="29.6" r=".85" fill="#fff" opacity=".9"></circle>
+          <path d="M22.5 34.3h3L24 36Z" fill="#d75c40"></path>
+          <path d="M24 36v1M24 37q-1.8 1.7-3.5.4M24 37q1.8 1.7 3.5.4" stroke="#b0472c" stroke-width="1.1" stroke-linecap="round" fill="none"></path>
+          <path d="M13.94 20.4a13 12 0 0 1 20.12 0Z" fill="#33425a"></path>
+          <path d="M13.94 20.4h20.12l1.66 2.4H12.28Z" fill="#46587a"></path>
+          <ellipse cx="24" cy="24.4" rx="14" ry="2.6" fill="#202b3c"></ellipse>
+          <circle cx="24" cy="18.2" r="2.3" fill="#ffc72c"></circle>
+        </svg>
+      </span>
+      <span>
+        <small>Your logbook</small>
+        <span id="chipStreak">0 focus min</span>
+      </span>
+    </button>
+  </div>
+</header>
+
+<main class="page">
+  <!-- ======================= HERO ======================= -->
+  <section class="hero" id="top">
+    <div class="hero-copy">
+      <div class="hero__eyebrow eyebrow">
+        <span id="heroCount">226 TRACKS</span><i></i><span id="heroRoute">NH 48</span><i></i><span>POMODORO</span><i></i><span>NO SIGN-UP</span>
+      </div>
+
+      <h1 class="hero__title">बस स्टडी<span class="latin">Bus Study</span></h1>
+
+      <div class="hero__sub rule">Study all night on NH 48</div>
+
+
+      <div class="hero-timer">
+      <!-- timer -->
+      <article class="timer-card timer-card--hero" id="timerCard">
+        <div class="card__head">
+          <span class="card__title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2.5 2M9 2h6"></path></svg>
+            One thing at a time
+          </span>
+          <button class="btn btn--quiet btn--sm" type="button" id="focusModeBtn" title="Focus mode (F)">Focus mode ↗</button>
+        </div>
+
+        <div class="timer-tabs" role="tablist" aria-label="Timer mode">
+          <button class="timer-tab" role="tab" id="tab-focus" aria-selected="true" data-mode="focus">Focus</button>
+          <button class="timer-tab" role="tab" id="tab-short" aria-selected="false" data-mode="short">Short break</button>
+          <button class="timer-tab" role="tab" id="tab-long" aria-selected="false" data-mode="long">Long break</button>
+        </div>
+
+        <div class="timer-display">
+          <div class="timer-digits" id="timerDigits" role="timer" aria-live="off">25:00</div>
+          <button class="timer-adjust" type="button" data-open="rhythm" title="Adjust timer lengths">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 20h4L20 8l-4-4L4 16v4Z"></path><path d="m13 6 5 5"></path></svg>
+            Adjust
+          </button>
+        </div>
+
+        <p class="timer-meta" id="timerMeta">A small start is still a start.</p>
+
+        <div class="timer-progress" aria-hidden="true"><i id="timerProgress"></i></div>
+
+        <div class="timer-actions">
+          <button class="btn btn--primary" type="button" id="startBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.1v13.8c0 .8.9 1.3 1.6.8l10-6.9c.6-.4.6-1.2 0-1.6l-10-6.9c-.7-.5-1.6 0-1.6.8Z"/></svg>
+            <span>Start focusing</span>
+          </button>
+          <button class="icon-btn" type="button" id="resetBtn" aria-label="Reset timer" title="Reset timer">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>
+          </button>
+        </div>
+
+        <div class="rounds" id="rounds" aria-label="Pomodoro rounds">
+          <span>Round</span>
+          <i class="now"></i><i></i><i></i><i></i>
+          <span>of 4</span>
+        </div>
+      </article>
+      </div>
+
+      <div class="hero-foot">
+        <div class="horn-wrap" id="hornWrap">
+          <button class="horn" id="hornBtn" type="button" aria-label="Play the bus horn">
+            <span class="horn__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 9v6h3l5 4V5L6 9H3Z"></path><path d="M16 8.5a5 5 0 0 1 0 7"></path><path d="M18.8 5.6a9 9 0 0 1 0 12.8"></path>
+              </svg>
+            </span>
+            <span class="horn__label">
+              <span class="horn__hi">हॉर्न ओके प्लीज़</span>
+              <span class="horn__en">Horn ok pleaseeee</span>
+            </span>
+          </button>
+          <span class="horn-ring"></span>
+        </div>
+      <div class="hero__stats">
+        <span><b id="statFocus">0</b> min focused today</span>
+        <span class="dot"></span>
+        <span><b id="statTasks">0</b> tasks done</span>
+        <span class="dot"></span>
+        <span><b id="statRounds">0</b> rounds</span>
+      </div>
+      </div>
+    </div>
+
+    <aside class="buddy-card" aria-label="Your study buddy">
+      <p class="buddy-bubble" id="buddyBubble">Ek chapter khatam karein? I’ll sit with you.</p>
+      <button class="buddy-avatar" id="buddyAvatar" type="button" aria-label="Pet your study buddy">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="24" r="24" fill="#341709"></circle>
+          <ellipse cx="24" cy="13" rx="22" ry="15" fill="#8a3f14" opacity=".45"></ellipse>
+          <path d="M13.2 22.5 14.6 9.2 24.2 16.6Z" fill="#f2913f"></path>
+          <path d="M34.8 22.5 33.4 9.2 23.8 16.6Z" fill="#f2913f"></path>
+          <path d="M15.4 20.4 16.2 12.8 21.6 17.1Z" fill="#c1552a"></path>
+          <path d="M32.6 20.4 31.8 12.8 26.4 17.1Z" fill="#c1552a"></path>
+          <ellipse cx="24" cy="28" rx="13" ry="12" fill="#f2913f"></ellipse>
+          <ellipse cx="21.3" cy="36.2" rx="3.6" ry="2.8" fill="#ffc189"></ellipse>
+          <ellipse cx="26.7" cy="36.2" rx="3.6" ry="2.8" fill="#ffc189"></ellipse>
+          <g stroke="#ffd9b0" stroke-width=".9" stroke-linecap="round" opacity=".5">
+            <path d="M14.6 33.4 8.4 31.8M14.4 35.3 7.9 35.4M14.9 37 9.2 38.9"></path>
+            <path d="M33.4 33.4 39.6 31.8M33.6 35.3 40.1 35.4M33.1 37 38.8 38.9"></path>
+          </g>
+          <ellipse cx="19" cy="31" rx="3.3" ry="3.7" fill="#fff4e2"></ellipse>
+          <ellipse cx="29" cy="31" rx="3.3" ry="3.7" fill="#fff4e2"></ellipse>
+          <ellipse cx="19" cy="31.1" rx="1.35" ry="2.8" fill="#150803"></ellipse>
+          <ellipse cx="29" cy="31.1" rx="1.35" ry="2.8" fill="#150803"></ellipse>
+          <circle cx="18.1" cy="29.6" r=".85" fill="#fff" opacity=".9"></circle>
+          <circle cx="28.1" cy="29.6" r=".85" fill="#fff" opacity=".9"></circle>
+          <path d="M22.5 34.3h3L24 36Z" fill="#d75c40"></path>
+          <path d="M24 36v1M24 37q-1.8 1.7-3.5.4M24 37q1.8 1.7 3.5.4" stroke="#b0472c" stroke-width="1.1" stroke-linecap="round" fill="none"></path>
+          <path d="M13.94 20.4a13 12 0 0 1 20.12 0Z" fill="#33425a"></path>
+          <path d="M13.94 20.4h20.12l1.66 2.4H12.28Z" fill="#46587a"></path>
+          <ellipse cx="24" cy="24.4" rx="14" ry="2.6" fill="#202b3c"></ellipse>
+          <circle cx="24" cy="18.2" r="2.3" fill="#ffc72c"></circle>
+        </svg>
+        <video id="catVideo" src="assets/dancing-cat.webm" loop muted playsinline preload="none" aria-hidden="true"></video>
+        <span class="buddy-pets" id="buddyPets" aria-hidden="true"></span>
+      </button>
+      <div>
+        <h2 class="buddy-name"><span class="sr-only">Study buddy: </span><span id="buddyName" style="font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:none;color:inherit;margin:0">Chhotu</span><span>your study buddy</span></h2>
+      </div>
+      <button class="btn btn--ghost btn--sm" type="button" data-open="buddy">Change buddy &amp; pose</button>
+      <div class="buddy-actions">
+        <button class="btn btn--ghost btn--sm" type="button" id="petBtn">♡ Pet</button>
+        <button class="btn btn--ghost btn--sm" type="button" id="playBtn">◉ Play</button>
+        <button class="btn btn--ghost btn--sm" type="button" data-open="buddy">More ⋯</button>
+      </div>
+    </aside>
+  </section>
+
+  <!-- ======================= DESK ======================= -->
+  <section class="desk" aria-label="Study desk">
+    <!-- tasks -->
+    <article class="card card--tasks" aria-labelledby="tasksTitle">
+      <div class="card__head">
+        <span class="card__title" id="tasksTitle">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v14H4z"></path><path d="m8 12 3 3 5-6"></path></svg>
+          Little intentions
+        </span>
+        <span class="task-total" id="taskTotal">0 / 0</span>
+      </div>
+
+      <div id="taskEmpty" class="task-empty">Make a little room for what matters.<br>One chapter? A few flashcards? Start small.</div>
+      <ul class="task-list" id="taskList" aria-live="polite"></ul>
+
+      <div class="task-subject" id="subjectRow" aria-label="Subject for the new task">
+        <button type="button" aria-pressed="true" data-subject="">Subject</button>
+        <button type="button" aria-pressed="false" data-subject="Maths">Maths</button>
+        <button type="button" aria-pressed="false" data-subject="Science">Science</button>
+        <button type="button" aria-pressed="false" data-subject="English">English</button>
+        <button type="button" aria-pressed="false" data-subject="Revision">Revision</button>
+      </div>
+
+      <form class="task-add" id="taskForm" autocomplete="off">
+        <input class="task-input" id="taskInput" type="text" maxlength="120" placeholder="What are we studying?" aria-label="New study task">
+        <button type="submit" aria-label="Add task">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+        </button>
+      </form>
+    </article>
+
+    <!-- mood -->
+    <article class="card card--mood" aria-labelledby="moodTitle">
+      <div class="card__head">
+        <span class="card__title" id="moodTitle">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="17" cy="16" r="3"></circle></svg>
+          Set the mood
+        </span>
+        <span class="card__hint" id="soundState">SOUND OFF</span>
+      </div>
+
+      <div class="mood-card-inner">
+        <div style="flex:1;min-width:0">
+          <div class="mood-grid">
+            <button class="mood" type="button" data-amb="rain" aria-pressed="false" title="Rainfall on the window">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 15a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.4 1.5A3.5 3.5 0 0 1 17.5 15"></path><path d="m8 18-1 3M12 18l-1 3M16 18l-1 3"></path></svg>
+              <span>Rainfall</span>
+            </button>
+            <button class="mood" type="button" data-amb="road" aria-pressed="false" title="Night highway hum">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20 8 4M18 20 16 4"></path><path d="M12 5v3M12 11v3M12 17v3"></path></svg>
+              <span>Bus hum</span>
+            </button>
+            <button class="mood" type="button" data-amb="brown" aria-pressed="false" title="Brown noise">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 12h2l2-5 2 10 2-8 2 6 2-4 2 3h4"></path></svg>
+              <span>Brown noise</span>
+            </button>
+          </div>
+
+          <div class="volume-row">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h3l5 4V5L7 9H4Z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg>
+            <input type="range" id="ambVolume" min="0" max="100" value="35" aria-label="Ambience volume">
+            <span class="vol-val" id="ambVolVal">35%</span>
+          </div>
+        </div>
+
+        <div style="flex:1.1;min-width:0">
+          <div class="scene-row" id="sceneRow" role="group" aria-label="Change scenery">
+            <button class="scene-thumb" type="button" data-scene="night" aria-pressed="true" title="NH 48 at night">
+              <img src="assets/road.jpg" alt="" loading="lazy"><span>NH 48</span>
+            </button>
+            <button class="scene-thumb" type="button" data-scene="monsoon" aria-pressed="false" title="Monsoon ghat">
+              <img src="assets/scenes/monsoon.jpg" alt="" loading="lazy"><span>Monsoon</span>
+            </button>
+            <button class="scene-thumb" type="button" data-scene="sunrise" aria-pressed="false" title="Sunrise fields">
+              <img src="assets/scenes/sunrise.jpg" alt="" loading="lazy"><span>Sunrise</span>
+            </button>
+            <button class="scene-thumb" type="button" data-scene="city" aria-pressed="false" title="City flyover">
+              <img src="assets/scenes/city.jpg" alt="" loading="lazy"><span>City</span>
+            </button>
+          </div>
+
+          <button class="own-music" type="button" id="ownMusicBtn">
+            <span style="display:flex;align-items:center;gap:8px;min-width:0">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="17" cy="16" r="3"></circle></svg>
+              <span id="ownMusicLabel">Your own music</span>
+            </span>
+            <span aria-hidden="true" style="color:var(--faint)">↗</span>
+          </button>
+          <input type="file" id="ownMusicInput" accept="audio/*" hidden>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ======================= ROUTES ======================= -->
+  <section class="routes" aria-labelledby="routesTitle">
+    <div class="section-head">
+      <div>
+        <h2 id="routesTitle">Pick a <em>route</em>, pick a soundtrack.</h2>
+        <p>Eight buses. 1,043 songs. The road decides the mood.</p>
+      </div>
+      <a class="see-all" href="playlist.html?route=90s-bus-driver-playlist">Open full queue ↗</a>
+    </div>
+    <div class="route-grid" id="routeGrid"></div>
+  </section>
+
+  <!-- ======================= EXPLAINED / FAQ ======================= -->
+  <section class="sheet" id="about" aria-labelledby="aboutTitle">
+    <p class="eyebrow eyebrow--dim">A little help getting started</p>
+    <h2 id="aboutTitle" style="margin-top:8px">Your night bus, <em>explained.</em></h2>
+    <p class="lede">Bus Study is a free Pomodoro room with a night-bus window. Plan one small task, put a song on, and let the timer do the rest. No account, no streak anxiety — everything stays in your browser.</p>
+
+    <div class="guide-grid">
+      <article class="guide">
+        <p class="guide__no">01 · Start small</p>
+        <h3>How to study with a Pomodoro timer</h3>
+        <p>Pick one task, press Start focusing for 25 minutes, then take 5 minutes off. Four rounds make a full trip.</p>
+        <span class="guide__more">Read the rhythm ↓</span>
+      </article>
+      <article class="guide">
+        <p class="guide__no">02 · Find your rhythm</p>
+        <h3>25/5 or 50/10?</h3>
+        <p>Long chapters suit 50/10. Tired evenings suit 25/5. You can set any length from 1 to 180 minutes in Adjust.</p>
+        <span class="guide__more">Adjust your timer ↗</span>
+      </article>
+      <article class="guide">
+        <p class="guide__no">03 · Settle in</p>
+        <h3>Make the bus feel like yours</h3>
+        <p>Four scenes, three soft ambiences, your own music, and a cat who studies when you do.</p>
+        <span class="guide__more">Set the mood ↗</span>
+      </article>
+    </div>
+
+    <h3 style="font-family:var(--font-serif);font-weight:400;font-size:22px;margin-top:36px;color:#fff">A few things you might be wondering</h3>
+    <div class="faq-list">
+      <details class="faq">
+        <summary>How does the Bus Study timer work?</summary>
+        <div class="faq__body">Choose Focus, add a task, and press <b>Start focusing</b>. The default is 25 minutes of study followed by a 5-minute short break. After four completed focus rounds the timer prepares a 15-minute long break. Every next session starts when you choose — the timer never runs away from you.</div>
+      </details>
+      <details class="faq">
+        <summary>Can I change the focus and break lengths?</summary>
+        <div class="faq__body">Yes. Click <b>Adjust</b> beside the countdown and pick whole minutes from 1 to 180 for focus, short breaks and long breaks. Saving resets the current countdown. Your rhythm is remembered in this browser.</div>
+      </details>
+      <details class="faq">
+        <summary>Are the bus songs really working?</summary>
+        <div class="faq__body">Yes — the bottom player is a real YouTube player. Press play, pick any of the eight routes, or open the queue with <kbd>Q</kbd>. Songs stream from YouTube, so they are the original uploads (and they need an internet connection). Some videos may show ads or be unavailable in your region.</div>
+      </details>
+      <details class="faq">
+        <summary>Can I listen to my own music?</summary>
+        <div class="faq__body">Choose <b>Your own music</b> in Set the mood and pick an audio file from your device. It plays locally, loops quietly under the ambience, and is never uploaded. You will need to choose it again after a reload.</div>
+      </details>
+      <details class="faq">
+        <summary>What do the sounds do?</summary>
+        <div class="faq__body">Rainfall, bus hum and brown noise are synthesised live in your browser — no audio files, no network. Layer them with the volume slider. The horn (<kbd>H</kbd>) is synthesised too, just for fun.</div>
+      </details>
+      <details class="faq">
+        <summary>Where are my tasks, timer and settings saved?</summary>
+        <div class="faq__body">Tasks, timer lengths, buddy name, scene, sound settings and your focus totals live in <b>localStorage</b> in this browser. They never leave your device, do not sync between devices, and clearing site data removes them.</div>
+      </details>
+      <details class="faq">
+        <summary>Can I use Bus Study on my phone?</summary>
+        <div class="faq__body">Yes. The desk stacks, the player docks to the bottom, and focus mode fills the screen. Add it to your home screen for a full-screen night bus. On iOS, YouTube playback needs a tap on the play button.</div>
+      </details>
+      <details class="faq">
+        <summary>Who made this and why?</summary>
+        <div class="faq__body">Bus Study is a love letter to overnight buses, 90s Hindi cassettes and the small discipline of one chapter at a time. It was rebuilt from the spirit of <a href="https://busdriver.wtf/" target="_blank" rel="noopener">busdriver.wtf</a> with a Pomodoro room inspired by cosy study spaces. It is free and has no ads.</div>
+      </details>
+    </div>
+
+    <div class="contact-strip">
+      <div>
+        <h3>Need a human? Say beep beep.</h3>
+        <p>Questions about the timer, a song, or the road ahead — write to us.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+        <a class="mail" href="mailto:hello@busstudy.app">hello@busstudy.app</a>
+        <button class="btn btn--ghost btn--sm" type="button" data-open="logbook">Open my logbook ↗</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>Bus Study · a Pomodoro room on NH 48 · built for late-night revision.</p>
+    <nav>
+      <a href="#about">Help &amp; FAQ</a>
+      <a href="playlist.html?route=90s-bus-driver-playlist">All songs</a>
+      <a href="https://busdriver.wtf/" target="_blank" rel="noopener">Original bus ↗</a>
+      <a href="mailto:hello@busstudy.app">Contact</a>
+    </nav>
+  </footer>
+</main>
+
+<!-- ======================= PLAYER DOCK ======================= -->
+<div class="dock-wrap">
+  <div class="dock" id="dock" aria-label="Bus radio">
+    <button class="dock__art" id="dockArt" type="button" title="Show the video" aria-label="Show the video">
+      <img id="dockImg" alt="" src="https://i.ytimg.com/vi/fvwyPGBOEgY/hqdefault.jpg">
+      <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+
+    <div class="dock__info">
+      <p class="dock__title" id="dockTitle">Dil Ke Badle Sanam</p>
+      <p class="dock__artist" id="dockArtist">T-Series</p>
+      <div class="dock__seek">
+        <span id="seekNow">0:00</span>
+        <div class="dock__bar" id="seekBar" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="seekFill"></i></div>
+        <span id="seekDur">0:00</span>
+      </div>
+    </div>
+
+    <div class="dock__controls">
+      <button class="icon-btn" type="button" id="prevBtn" aria-label="Previous track">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h2v14H6zM20 5.6v12.8c0 .8-.9 1.2-1.5.8l-9-6.4a1 1 0 0 1 0-1.6l9-6.4c.6-.4 1.5 0 1.5.8Z"/></svg>
+      </button>
+      <button class="dock__play" type="button" id="playPause" aria-label="Play">
+        <svg id="playIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.1v13.8c0 .8.9 1.3 1.6.8l10-6.9c.6-.4.6-1.2 0-1.6l-10-6.9c-.7-.5-1.6 0-1.6.8Z"/></svg>
+        <svg id="pauseIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none"><path d="M7 5h3.4v14H7zM13.6 5H17v14h-3.4z"/></svg>
+      </button>
+      <button class="icon-btn" type="button" id="nextBtn" aria-label="Next track">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 5h-2v14h2zM4 5.6v12.8c0 .8.9 1.2 1.5.8l9-6.4a1 1 0 0 0 0-1.6l-9-6.4C4.9 4.4 4 4.8 4 5.6Z"/></svg>
+      </button>
+    </div>
+
+    <div class="dock__side">
+      <button class="icon-btn" type="button" id="shuffleBtn" aria-label="Shuffle the bus" aria-pressed="false" title="Shuffle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h4l10 12h4M3 18h4L15 8"></path><path d="M18 3.5 21.5 6 18 8.5M18 15.5l3.5 2.5-3.5 2.5"></path></svg>
+      </button>
+      <button class="icon-btn" type="button" id="muteBtn" aria-label="Mute" aria-pressed="false" title="Mute">
+        <svg id="volIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h3l5 4V5L7 9H4Z"></path><path d="M16 9a4 4 0 0 1 0 6"></path><path d="M18.5 6.5a8 8 0 0 1 0 11"></path></svg>
+        <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none"><path d="M4 9v6h3l5 4V5L7 9H4Z"></path><path d="m16 9.5 4.5 5M20.5 9.5 16 14.5"></path></svg>
+      </button>
+      <button class="icon-btn" type="button" id="queueBtn" aria-label="Toggle queue" aria-expanded="false" title="Queue (Q)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h11M4 12h11M4 17h7M18 8v8M18 8l3-1v8"></path><circle cx="16.4" cy="16.6" r="1.6"></circle></svg>
+      </button>
+      <button class="icon-btn" type="button" id="videoBtn" aria-label="Show video" aria-pressed="false" title="Video">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="m16 11 5-3v8l-5-3Z"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="keys" aria-hidden="true">
+    <span><kbd>Space</kbd> Play / pause</span>
+    <span><kbd>←</kbd><kbd>→</kbd> Seek</span>
+    <span><kbd>N</kbd><kbd>P</kbd> Track</span>
+    <span><kbd>Q</kbd> Queue</span>
+    <span><kbd>S</kbd> Start timer</span>
+    <span><kbd>F</kbd> Focus</span>
+    <span><kbd>H</kbd> Horn</span>
+  </div>
+</div>
+
+<!-- YouTube audio engine (real player, hidden until you ask for video) -->
+<div id="ytShell" aria-hidden="true">
+  <div id="ytPlayer"></div>
+</div>
+
+<!-- ======================= OVERLAYS ======================= -->
+<!-- queue -->
+<div class="overlay" id="overlay-queue" role="dialog" aria-modal="true" aria-label="Song queue">
+  <div class="overlay__scrim" data-close></div>
+  <div class="sheet-modal">
+    <div class="sheet-modal__head">
+      <h3>On the bus · <span id="queueCount">226</span> tracks</h3>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="btn btn--ghost btn--sm" type="button" id="queueShuffle">Shuffle</button>
+        <button class="icon-btn" type="button" data-close aria-label="Close queue">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+        </button>
+      </div>
+    </div>
+    <div class="queue-tabs" id="queueTabs" role="tablist" aria-label="Playlists"></div>
+    <div class="sheet-modal__body">
+      <div id="queueRows"></div>
+    </div>
+  </div>
+</div>
+
+<!-- rhythm -->
+<div class="overlay overlay--center" id="overlay-rhythm" role="dialog" aria-modal="true" aria-labelledby="rhythmTitle">
+  <div class="overlay__scrim" data-close></div>
+  <div class="dialog">
+    <button class="icon-btn dialog__close" type="button" data-close aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+    <h3 id="rhythmTitle">Find a pace that feels like you.</h3>
+    <p class="sub">A long break comes after four focus rounds. Saving resets the current timer.</p>
+
+    <div class="field">
+      <label for="focusLen">Focus minutes <b id="focusLenVal">25</b></label>
+      <input type="range" id="focusLen" min="1" max="180" value="25">
+    </div>
+    <div class="field">
+      <label for="shortLen">Short break <b id="shortLenVal">5</b></label>
+      <input type="range" id="shortLen" min="1" max="60" value="5">
+    </div>
+    <div class="field">
+      <label for="longLen">Long break <b id="longLenVal">15</b></label>
+      <input type="range" id="longLen" min="1" max="60" value="15">
+    </div>
+    <div class="dialog__actions">
+      <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+      <button class="btn btn--primary" type="button" id="saveRhythm">Save my rhythm</button>
+    </div>
+  </div>
+</div>
+
+<!-- buddy -->
+<div class="overlay overlay--center" id="overlay-buddy" role="dialog" aria-modal="true" aria-labelledby="buddyTitle">
+  <div class="overlay__scrim" data-close></div>
+  <div class="dialog">
+    <button class="icon-btn dialog__close" type="button" data-close aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+    <h3 id="buddyTitle">A name for your little conductor.</h3>
+    <p class="sub">Chhotu sits on the dashboard, studies when you do, and naps on breaks.</p>
+
+    <div class="field">
+      <label for="buddyInput">Buddy’s name</label>
+      <input class="num" type="text" id="buddyInput" maxlength="24" placeholder="Chhotu">
+    </div>
+
+    <div class="field">
+      <label>Study pose</label>
+      <div class="task-subject" id="poseRow">
+        <button type="button" data-pose="sit" aria-pressed="true">Sitting</button>
+        <button type="button" data-pose="side" aria-pressed="false">Window seat</button>
+        <button type="button" data-pose="sleep" aria-pressed="false">Napping</button>
+      </div>
+    </div>
+
+    <div class="dialog__actions">
+      <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+      <button class="btn btn--primary" type="button" id="saveBuddy">Save buddy</button>
+    </div>
+    <p class="dialog__note">Names and poses are stored in this browser only.</p>
+  </div>
+</div>
+
+<!-- logbook -->
+<div class="overlay overlay--center" id="overlay-logbook" role="dialog" aria-modal="true" aria-labelledby="logTitle">
+  <div class="overlay__scrim" data-close></div>
+  <div class="dialog">
+    <button class="icon-btn dialog__close" type="button" data-close aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+    <h3 id="logTitle">Your conductor’s logbook.</h3>
+    <p class="sub">Every finished round is another stop on the route. Kept in this browser only.</p>
+
+    <div class="log-grid">
+      <div class="log-stat"><b id="logFocus">0</b><span>focus min</span></div>
+      <div class="log-stat"><b id="logRounds">0</b><span>rounds</span></div>
+      <div class="log-stat"><b id="logDays">0</b><span>days aboard</span></div>
+    </div>
+
+    <div class="log-week" id="logWeek" aria-label="Focus minutes over the last seven days"></div>
+
+    <div class="ticket">
+      <span>NH 48 · Seat 26</span>
+      <span id="ticketNo">TICKET 0000</span>
+    </div>
+
+    <div class="dialog__actions">
+      <button class="btn btn--ghost" type="button" id="printTicket">Print ticket</button>
+      <button class="btn btn--primary" type="button" data-close>Back to studying</button>
+    </div>
+  </div>
+</div>
+
+<!-- focus mode -->
+<div class="focus-mode" id="focusMode" role="dialog" aria-modal="true" aria-label="Focus mode">
+  <div class="focus-mode__top">
+    <span>Bus Study · NH 48</span>
+    <button class="btn btn--ghost btn--sm" type="button" id="focusExit">Leave focus mode (Esc)</button>
+  </div>
+
+  <p class="focus-mode__eyebrow" id="focusLabel">FOCUS · ROUND 1 OF 4</p>
+  <div class="focus-mode__digits" id="focusDigits">25:00</div>
+  <div class="focus-mode__bar" aria-hidden="true"><i id="focusProgress"></i></div>
+  <p class="focus-mode__task" id="focusTask">One chapter. That’s all.</p>
+
+  <div class="focus-mode__song">
+    <img id="focusArt" src="https://i.ytimg.com/vi/fvwyPGBOEgY/hqdefault.jpg" alt="">
+    <div>
+      <b id="focusSong">Dil Ke Badle Sanam</b>
+      <span id="focusArtist">T-Series</span>
+    </div>
+  </div>
+
+  <div class="focus-mode__controls">
+    <button class="btn btn--primary" type="button" id="focusStart">Pause</button>
+    <button class="btn btn--ghost" type="button" id="focusReset">Reset</button>
+    <button class="btn btn--ghost" type="button" id="focusSkip">Short break</button>
+  </div>
+  <p class="focus-mode__hint">Space to play / pause · Esc to leave</p>
+</div>
+
+<div class="toast-wrap" id="toasts" aria-live="polite"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
