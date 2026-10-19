@@ -4,9 +4,6 @@
 task list, soft rain on the window, four illustrated scenes, and **1,043 nostalgic Hindi
 songs** that actually play.
 
-Built by cloning the behaviour and craft of **[busdriver.wtf](https://busdriver.wtf/)** and
-re-shaping it into a study product in the spirit of **[studywithcat.online](https://studywithcat.online/)**.
-
 ---
 
 ## Run it
